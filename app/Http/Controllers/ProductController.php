@@ -3,82 +3,77 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // show data
     public function index()
     {
-        //
+        $data = Product::all();
+
+        // return $data;
+        return response()->json([
+            "message" => "Load data success",
+            "data" => $data
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   // add data
     public function store(Request $request)
     {
-        //
+        $store = new Product();
+        $store->product_name = $request->product_name;
+        $store->id_category = $request->id_category;
+        $store->category = $request->category;
+        $store->description = $request->description;
+        $store->price = $request->price;
+        $store->stock = $request->stock;
+        $store->picture = $request->picture;
+        $store->save();
+
+        return response()->json([
+            "message" => "Create data success",
+            "data" => $store
+        ], 200);
+       
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    // show by category
+    public function show($category)
     {
-        //
+        $show = Product::where('category', 'like', '%' . $category . '%')->get();
+        if($show){
+            return response()->json([
+                "message" => "Show data Success",
+                "data" => $show 
+            ]);
+        }else{
+            return ["message" => "Data not found"];
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // update product
     public function update(Request $request, $id)
     {
-        //
+        $update = Product::where("id_product", $id)->update($request->all());
+        
+        // return $update;
+         return response()->json([
+            "message" => "Update data success",
+            "data" => $update
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Category
     public function destroy($id)
     {
-        //
+        $data = Product::where("id_product", $id);
+        if($data){
+            $data->delete();
+            return["message" => "Delete Success"];
+        }else{
+            return["message" => "Data not found"];
+        }
     }
 }

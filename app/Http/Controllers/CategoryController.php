@@ -3,82 +3,60 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // show data
     public function index()
     {
-        //
+        $data = Category::all();
+
+        // return $data;
+        return response()->json([
+            "message" => "Load data success",
+            "data" => $data
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   // add data
     public function store(Request $request)
     {
-        //
+        $store = Category::create($request->all());
+        
+        return response()->json([
+            "message" => "Create data success",
+            "data" => $store
+        ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Update Catrgory
     public function update(Request $request, $id)
     {
-        //
+        $update = Category::where("id_categories", $id)->update($request->all());
+        
+        // return $update;
+         return response()->json([
+            "message" => "Update data success",
+            "data" => $update
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Delete Category
     public function destroy($id)
     {
-        //
+        $data = Category::where("id_categories", $id);
+        if($data){
+            $data->delete();
+            return["message" => "Delete Success"];
+        }else{
+            return["message" => "Data not found"];
+        }
     }
 }
