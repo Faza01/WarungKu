@@ -10,5 +10,14 @@ class Product extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_product';
-    protected $fillable = ["product_name", "category", "description", "price", "stock", "picture"];
+    protected $guarded = ['id_product'];
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'id_category');
+    }
 }

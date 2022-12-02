@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
+
 
 class TransactionController extends Controller
 {
@@ -16,25 +18,15 @@ class TransactionController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    // Add Data
     public function store(Request $request)
     {
-        //
+        $store = Transaction::create($request->all());
+
+        return response()->json([
+            "message" => "Create data success",
+            "data" => $store
+        ], 200);
     }
 
     /**

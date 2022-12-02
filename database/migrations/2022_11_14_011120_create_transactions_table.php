@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('id_transaction');
-            $table->string('user');
+            $table->foreignId('id_product');
+            $table->foreignId('id_user');
             $table->string('address');
-            $table->string('product');
-            $table->integer('qty');
-            $table->string('price');
+            $table->string('qty');
+            $table->string('payment');
+            $table->string('total_price');
             $table->timestamps();   
         });
     }
