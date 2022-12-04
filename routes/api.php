@@ -31,20 +31,24 @@ Route::get('/category', [CategoryController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // transaction
-    Route::get('/trans', [TransactionController::class, 'index']);
+    Route::get('/my_trans', [TransactionController::class, 'show']);
     Route::post('/trans', [TransactionController::class, 'store']);
-    Route::post('/trans', [TransactionController::class, 'store']);
+    Route::post('/trans/{id}', [TransactionController::class, 'delete']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
+    
     // admin
     Route::middleware('admin')->group(function () {
         // product
         Route::post('/product', [ProductController::class, 'store']);
         Route::put('/product/{id}', [ProductController::class, 'update']);
         Route::delete('/product/{id}', [ProductController::class, 'destroy']);
-
+        
         // category
         Route::post('/category', [CategoryController::class, 'store']);
         Route::put('/category/{id}', [CategoryController::class, 'update']);
+        
+        // transaction
+        Route::get('/trans', [TransactionController::class, 'index']);
+        Route::put('/trans/{id}', [TransactionController::class, 'update']);
     });
 });

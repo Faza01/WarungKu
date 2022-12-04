@@ -30,7 +30,7 @@ class ProductController extends Controller
 
         $store = new Product();
         $store->name =  $request->name;
-        $store->category_id = $request->category_id;
+        $store->category_id = $category_id;
         $store->category = Category::where('id', $category_id)->value('name');
         $store->description = $request->description;
         $store->price = $request->price;
@@ -38,7 +38,7 @@ class ProductController extends Controller
         $store->picture = $picture;
         $store->save();
         
-        // save image on public
+        // save picture on public
         Storage::disk('public')->put($picture, file_get_contents($request->picture));
 
         // return $store;
@@ -52,19 +52,63 @@ class ProductController extends Controller
     // Show by category
     public function show($id)
     {
-        //
+        $show = Product::where('category', 'like', '%' . $id . '%')->get();
+        if($show){
+            return response()->json([
+                "message" => "Show data Success",
+                "data" => $show 
+            ]);
+        }else{
+            return ["message" => "Data not found"];
+        }
     }
 
     // Update data
     public function update(Request $request, $id)
     {
-        $update = Product::where("id", $id)->update($request->all());
+        $update = Product::find($id);
+        $category_id = $request->category_id ? $request->category_id : $update->category_id;
+
+        if($update){
+            $update->name = $request->name ? $request->name : $update->name;
+            $update->category_id = $category_id;
+            $update->category = Category::where('id', $category_id)->value('name');
+            $update->description = $request->description ? $request->description : $update->description;
+            $update->price = $request->price ? $request->price : $update->price;
+            $update->stock = $request->stock ? $request->stock : $update->stock;
+
+            if($request->picture) {
+                // Public storage
+                $storage = Storage::disk('public');
+     
+                // Old iamge delete
+                if($storage->exists($update->picture))
+                    $storage->delete($update->picture);
+     
+                // Image name
+                $pictureName = Str::random(32).".".$request->picture->getClientOriginalExtension();
+                $update->picture = $pictureName;
+     
+                // Image save in public folder
+                $storage->put($pictureName, file_get_contents($request->picture));
+            }
+
+            $update->save();
+
+            return $update;
+        }else{
+            return ["message" => "Data not found"];
+        }
+
         
-        // return $update;
-         return response()->json([
-            "message" => "Update data success",
-            "data" => $update
-        ], 200);
+
+        // $update->save();
+
+        // // return $update;
+        //  return response()->json([
+        //     "message" => "Update data success",
+        //     "data" => $update
+        // ], 200);
     }
 
     // Delete data

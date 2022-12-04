@@ -13,7 +13,7 @@ class TransactionController extends Controller
     // show data
     public function index()
     {
-        $data = Transaction::where('id', auth()->user()->id)->get();
+        $data = Transaction::all();
         return response([
             'status' => 200,
             'data' => $data
@@ -46,46 +46,37 @@ class TransactionController extends Controller
         ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    // show my trans
+    public function show()
     {
-        //
+        $user_id = auth()->user()->id;
+        $user_name = User::where('id', $user_id)->value('name');
+
+        $show = Transaction::where('user_name', $user_name)->get();
+        if($show){
+            return response()->json([
+                "message" => "Show data Success",
+                "data" => $show 
+            ]);
+        }else{
+            return ["message" => "Data not found"];
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // update status
     public function update(Request $request, $id)
     {
-        //
+        $update = Transaction::where("id", $id)->update($request->all());
+        
+        // return $update;
+         return response()->json([
+            "message" => "Transaction confirmation success",
+            "data" => $update
+        ], 200);
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // update status
     public function destroy($id)
     {
         //

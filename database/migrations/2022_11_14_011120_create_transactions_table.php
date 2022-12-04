@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('qty');
             $table->string('payment');
             $table->string('total_price');
+            $table->string('status')->default('pending');
             $table->timestamps();   
         });
     }
