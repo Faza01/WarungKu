@@ -31,7 +31,9 @@ Route::get('/category', [CategoryController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // transaction
-
+    Route::get('/trans', [TransactionController::class, 'index']);
+    Route::post('/trans', [TransactionController::class, 'store']);
+    Route::post('/trans', [TransactionController::class, 'store']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // admin

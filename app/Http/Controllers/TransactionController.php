@@ -4,27 +4,44 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-
+use App\Models\Product;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // show data
     public function index()
     {
-        //
+        $data = Transaction::where('id', auth()->user()->id)->get();
+        return response([
+            'status' => 200,
+            'data' => $data
+        ], 200);
     }
 
     // Add Data
     public function store(Request $request)
     {
-        $store = Transaction::create($request->all());
+        $product_id = $request->product_id;
+        $user_id = auth()->user()->id;
+        $price = Product::where('id', $product_id)->value('price');
+        $qty = $request->qty;
+        $total_price = $price * $qty;
+
+        $store = new Transaction();
+        $store->product_id = $product_id;
+        $store->product_name = Product::where('id', $product_id)->value('name');
+        $store->user_id = $user_id;
+        $store->user_name = User::where('id', $user_id)->value('name');
+        $store->address = $request->address;
+        $store->qty = $qty;
+        $store->total_price = $total_price;
+        $store->payment = $request->payment;
+        $store->save();
 
         return response()->json([
-            "message" => "Create data success",
+            "message" => "Create transaction success",
             "data" => $store
         ], 200);
     }

@@ -40,7 +40,7 @@ class CategoryController extends Controller
     // Update data
     public function update(Request $request, $id)
     {
-        $update = Category::where("id_category", $id)->update($request->all());
+        $update = Category::where("id", $id)->update($request->all());
         
         // return $update;
          return response()->json([

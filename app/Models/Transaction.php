@@ -9,17 +9,14 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["id_product", "id_user", "address", "qty", "payment", "total_price"];
-    protected $with = [
-        'product',
-        'user'
-    ];
+    protected $guarded = ['id'];
+
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product');
+        return $this->belongsTo(Product::class);
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class);
     }
 }

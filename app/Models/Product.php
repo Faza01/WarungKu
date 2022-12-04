@@ -9,15 +9,14 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_product';
-    protected $guarded = ['id_product'];
+    protected $guarded = ['id'];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
     public function transaction()
     {
         return $this->hasMany(Transaction::class);
-    }
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'id_category');
     }
 }
